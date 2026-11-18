@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Register your student business</h1>
+    <p class="muted">All fields except description are required. After you register, your business will be reviewed by an administrator.</p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="message error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {% for field in form %}
+            <p>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="message error">{{ field.errors|striptags }}</span>
+                {% endif %}
+            </p>
+        {% endfor %}
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p class="muted" style="margin-top:16px;">
+        Already registered? <a href="{% url 'accounts:login' %}">Log in</a>.
+    </p>
+</div>
+{% endblock %}

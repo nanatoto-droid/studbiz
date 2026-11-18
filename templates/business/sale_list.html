@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Sales{% endblock %}
+{% block content %}
+<div class="flex-between">
+    <h1>Sales</h1>
+    <a class="btn" href="{% url 'business:sale_add' %}">Record a sale</a>
+</div>
+
+<div class="card">
+    <form method="get" class="flex-between">
+        <p>
+            <label for="start">From</label>
+            <input type="date" id="start" name="start" value="{{ start }}">
+        </p>
+        <p>
+            <label for="end">To</label>
+            <input type="date" id="end" name="end" value="{{ end }}">
+        </p>
+        <p><button type="submit">Filter</button></p>
+    </form>
+    <p><strong>Total: KES {{ total }}</strong></p>
+</div>
+
+{% if sales %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Date</th><th>Product</th><th>Qty</th><th>Unit price (KES)</th><th>Total (KES)</th><th>Payment</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for s in sales %}
+                    <tr>
+                        <td>{{ s.date }}</td>
+                        <td>{{ s.product.name }}</td>
+                        <td>{{ s.quantity }}</td>
+                        <td>{{ s.unit_price }}</td>
+                        <td>{{ s.total_amount }}</td>
+                        <td>{{ s.payment_method }}</td>
+                        <td>
+                            <a class="btn btn-small btn-danger" href="{% url 'business:sale_delete' s.id %}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p class="muted">No sales found for the selected range.</p>
+{% endif %}
+{% endblock %}

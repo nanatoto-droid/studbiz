@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ target.name }}{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>{{ target.name }}</h1>
+    <p><strong>Category:</strong> {{ target.category }}</p>
+    <p><strong>University:</strong> {{ target.university }}</p>
+    <p><strong>Description:</strong> {{ target.description|default:"(no description)" }}</p>
+    {% if show_phone %}
+        <p><strong>Phone:</strong> {{ target.phone }}</p>
+    {% endif %}
+</div>
+
+{% if not is_self %}
+    <div class="card">
+        {% if already_pending %}
+            <p class="muted">You have a pending partnership request to this business.</p>
+        {% else %}
+            <a class="btn" href="{% url 'network:send_request' target.id %}">Send partnership request</a>
+        {% endif %}
+    </div>
+{% endif %}
+
+<p><a class="btn btn-secondary" href="{% url 'network:directory' %}">Back to directory</a></p>
+{% endblock %}

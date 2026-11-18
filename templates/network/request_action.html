@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} request{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>{{ action }} request?</h1>
+    <p>
+        From <strong>{{ req.sender.name }}</strong>
+        &mdash; {{ req.message|default:"(no message)" }}
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn {% if action == 'Decline' %}btn-danger{% endif %}">Yes, {{ action|lower }}</button>
+        <a class="btn btn-secondary" href="{% url 'network:request_list' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

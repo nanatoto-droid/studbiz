@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Directory{% endblock %}
+{% block content %}
+<h1>Business directory</h1>
+<p class="muted">Approved student businesses only. You are not shown in your own directory.</p>
+
+<div class="card">
+    <form method="get" class="flex-between">
+        <p>
+            <label for="q">Search</label>
+            <input type="text" id="q" name="q" value="{{ q }}" placeholder="Name, category, university">
+        </p>
+        <p>
+            <label for="category">Category</label>
+            <select id="category" name="category">
+                <option value="">All</option>
+                {% for value, label in category_choices %}
+                    <option value="{{ value }}" {% if category == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="university">University</label>
+            <input type="text" id="university" name="university" value="{{ university }}">
+        </p>
+        <p><button type="submit">Filter</button></p>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Results ({{ businesses|length }})</h2>
+    {% if businesses %}
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Name</th><th>Category</th><th>University</th><th></th></tr></thead>
+                <tbody>
+                    {% for b in businesses %}
+                        <tr>
+                            <td><a href="{% url 'network:directory_detail' b.id %}">{{ b.name }}</a></td>
+                            <td>{{ b.category }}</td>
+                            <td>{{ b.university }}</td>
+                            <td>
+                                {% if b.id in accepted_ids %}
+                                    <span class="muted">Partner</span>
+                                {% else %}
+                                    <a class="btn btn-small" href="{% url 'network:directory_detail' b.id %}">View</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="muted">No approved businesses match your search.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Suggestions for you</h2>
+    {% if suggestions %}
+        <ul>
+            {% for b in suggestions %}
+                <li>
+                    <a href="{% url 'network:directory_detail' b.id %}">{{ b.name }}</a>
+                    &mdash; {{ b.category }} &mdash; {{ b.university }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted">No suggestions right now.</p>
+    {% endif %}
+</div>
+{% endblock %}

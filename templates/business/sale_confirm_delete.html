@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Delete sale{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Delete sale?</h1>
+    <p>Deleting this sale will restore <strong>{{ sale.quantity }}</strong> unit(s) of
+        <strong>{{ sale.product.name }}</strong> back to stock.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a class="btn btn-secondary" href="{% url 'business:sale_list' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

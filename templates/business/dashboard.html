@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>{{ business.name }} &mdash; Dashboard</h1>
+<p class="muted">All amounts in KES.</p>
+
+<div class="page-actions">
+    <a class="btn" href="{% url 'business:sale_add' %}">Record a sale</a>
+    <a class="btn" href="{% url 'business:expense_add' %}">Record an expense</a>
+    <a class="btn btn-secondary" href="{% url 'business:product_add' %}">Add product</a>
+</div>
+
+<h2>This week (from {{ week_start }})</h2>
+<div class="stat-grid">
+    <div class="stat"><div class="label">Sales</div><div class="value">KES {{ week_sales }}</div></div>
+    <div class="stat"><div class="label">Expenses</div><div class="value">KES {{ week_expenses }}</div></div>
+    <div class="stat"><div class="label">Net profit</div><div class="value">KES {{ week_net }}</div></div>
+</div>
+
+<h2>This month (from {{ month_start }})</h2>
+<div class="stat-grid">
+    <div class="stat"><div class="label">Sales</div><div class="value">KES {{ month_sales }}</div></div>
+    <div class="stat"><div class="label">Expenses</div><div class="value">KES {{ month_expenses }}</div></div>
+    <div class="stat"><div class="label">Net profit</div><div class="value">KES {{ month_net }}</div></div>
+</div>
+
+<h2>All time</h2>
+<div class="stat-grid">
+    <div class="stat"><div class="label">Sales</div><div class="value">KES {{ all_sales }}</div></div>
+    <div class="stat"><div class="label">Expenses</div><div class="value">KES {{ all_expenses }}</div></div>
+    <div class="stat"><div class="label">Net profit</div><div class="value">KES {{ all_net }}</div></div>
+</div>
+
+<div class="card">
+    <h2>Top 5 best sellers</h2>
+    {% if top_sellers %}
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Product</th><th>Quantity sold</th><th>Revenue (KES)</th></tr></thead>
+                <tbody>
+                    {% for row in top_sellers %}
+                        <tr>
+                            <td>{{ row.product__name }}</td>
+                            <td>{{ row.qty }}</td>
+                            <td>{{ row.revenue }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="muted">No sales yet.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Low-stock products</h2>
+    {% if low_stock %}
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Product</th><th>Stock</th><th>Reorder level</th></tr></thead>
+                <tbody>
+                    {% for p in low_stock %}
+                        <tr><td>{{ p.name }}</td><td>{{ p.stock }}</td><td>{{ p.reorder_level }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="muted">All products are above reorder level.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Suggested businesses</h2>
+    {% if suggested %}
+        <ul>
+            {% for b in suggested %}
+                <li>
+                    <a href="{% url 'network:directory_detail' b.id %}">{{ b.name }}</a>
+                    &mdash; {{ b.category }} &mdash; {{ b.university }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted">No suggestions right now.</p>
+    {% endif %}
+</div>
+{% endblock %}

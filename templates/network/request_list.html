@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Partnership requests{% endblock %}
+{% block content %}
+<h1>Partnership requests</h1>
+
+<div class="card">
+    <h2>Received</h2>
+    {% if received %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>From</th><th>Message</th><th>Status</th><th>Phone</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for r in received %}
+                        <tr>
+                            <td><a href="{% url 'network:directory_detail' r.sender.id %}">{{ r.sender.name }}</a></td>
+                            <td>{{ r.message|default:"(no message)" }}</td>
+                            <td>{{ r.status }}</td>
+                            <td>
+                                {% if r.status == "Accepted" %}{{ r.sender.phone }}{% else %}<span class="muted">hidden</span>{% endif %}
+                            </td>
+                            <td class="actions">
+                                {% if r.status == "Pending" %}
+                                    <a class="btn btn-small" href="{% url 'network:accept_request' r.id %}">Accept</a>
+                                    <a class="btn btn-small btn-danger" href="{% url 'network:decline_request' r.id %}">Decline</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="muted">No received requests yet.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Sent</h2>
+    {% if sent %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>To</th><th>Message</th><th>Status</th><th>Phone</th></tr>
+                </thead>
+                <tbody>
+                    {% for r in sent %}
+                        <tr>
+                            <td><a href="{% url 'network:directory_detail' r.receiver.id %}">{{ r.receiver.name }}</a></td>
+                            <td>{{ r.message|default:"(no message)" }}</td>
+                            <td>{{ r.status }}</td>
+                            <td>
+                                {% if r.status == "Accepted" %}{{ r.receiver.phone }}{% else %}<span class="muted">hidden</span>{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="muted">No sent requests yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

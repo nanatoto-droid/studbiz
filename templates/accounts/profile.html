@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>My business profile</h1>
+    <p class="muted">You can edit your business details below. Approval status is managed by the administrator.</p>
+
+    <div class="stat-grid" style="margin-bottom:16px;">
+        <div class="stat">
+            <div class="label">Business</div>
+            <div class="value">{{ business.name }}</div>
+        </div>
+        <div class="stat">
+            <div class="label">Category</div>
+            <div class="value">{{ business.category }}</div>
+        </div>
+        <div class="stat">
+            <div class="label">University</div>
+            <div class="value">{{ business.university }}</div>
+        </div>
+        <div class="stat">
+            <div class="label">Status</div>
+            <div class="value">
+                {% if business.is_approved %}Approved{% else %}Pending approval{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <p>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="message error">{{ field.errors|striptags }}</span>
+                {% endif %}
+            </p>
+        {% endfor %}
+        <button type="submit">Save changes</button>
+    </form>
+</div>
+{% endblock %}
